@@ -11,3 +11,7 @@ Time
 Color
 update
 isDynamic -->
+
+Event:
+    Dynamic
+    Static
