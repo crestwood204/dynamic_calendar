@@ -2,16 +2,16 @@
 A calendar that allows scheduling of dynamic events - Python3
 
 
-<!-- Calendar Event: -->
-
-<!-- Title
-Location
-Date
-Time
-Color
-update
-isDynamic -->
-
 Event:
     Dynamic
     Static
+
+Server:
+    Create Event //Post
+    Update Event //Put
+    Delete Event //Delete
+    Get Event    //Get
+
+
+login page:
+    request user calendar
