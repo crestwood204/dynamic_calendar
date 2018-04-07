@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response, redirect
 from pymongo import MongoClient
 from models.events import *
 import datetime
 import os
+import requests
 
 app = Flask(__name__)
 app.debug = True
@@ -17,12 +18,24 @@ db = client.get_default_database()
 dynamic_events = []
 static_events = []
 
-@app.route("/", methods=['GET'])
+@app.route("/example", methods=['GET'])
 def hello(name=None):
     '''in url it will be /?adj=xxx'''
     adj = request.args.get('adj')
     print(adj)
     return render_template('hello.html', name=name)
+
+@app.route("/", methods=['GET'])
+def redirect_to_login():
+    return redirect('/login', code=302)
+
+@app.route("/login", methods=['GET'])
+def login():
+    return render_template('login.html')
+
+@app.route("/signup", methods=['GET'])
+def signup():
+    return render_template('signup.html')
 
 @app.route("/test_post", methods=['POST'])
 def test_post(name="Elizabeth"):
@@ -30,6 +43,20 @@ def test_post(name="Elizabeth"):
         "username": name
     }
     db.users.insert_one(new_user)
+
+@app.route("/new_user", methods=['POST'])
+def create_new_user(username=None, password=None):
+    if username and password:
+        new_user = {
+            'username': username,
+            'password': password,
+            'dynamic_events': [],
+            'static_events': []
+        }
+        db.users.insert_one(new_user)
+        return Response({"attempt": "success"}, status=201, mimetype="application/json")
+    else:
+        return Response({"attempt": "failure"}, status=400, mimetype="application/json")
 
 @app.route("/add_dynamic_event/<int:user_id>", methods=['POST'])
 def add_dynamic_event(dynamic_event):
