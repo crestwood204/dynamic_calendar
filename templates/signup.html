@@ -1,14 +1,10 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<!--- Include the above in your HEAD tag ---------->
 <html lang="en">
     <head>
       <meta charset="utf-8">
 
       <title>Dynamic Calendar</title>
       <meta name="Andrew Ong" content="Dynamic Calendar">
-
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
     </head>
     <body>
@@ -18,13 +14,16 @@
         		    <h3 class="form-signin-heading">Welcome! Account Creation</h3>
         			  <hr class="colorgraph"><br>
 
-        			  <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
-        			  <input type="password" class="form-control" name="password" placeholder="Password" required=""/>
+        			  <input id="username" type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
+        			  <input id="password" type="password" class="form-control" name="password" placeholder="Password" required=""/>
 
-        			  <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Sign Up" type="Submit">Create Account</button>
+        			  <button id="signup" class="btn btn-lg btn-primary btn-block"  name="Submit" value="Sign Up" type="button">Create Account</button>
                       <span> Already have an account? Login </span> <a href="/login"> here </a>
         		</form>
         	</div>
         </div>
     </body>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/signup.js') }}"></script>
 </html>

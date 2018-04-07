@@ -1,10 +1,10 @@
 $(document).ready(function() {
-    $('#login').on('click', function(event) {
+    $('#signup').on('click', function(event) {
         event.preventDefault();
         var username = $('#username').val();
         var password = $('#password').val();
         $.ajax({
-            url: '/login_post',
+            url: '/signup_post',
             method: 'post',
             data: {
                 'username': username,
@@ -14,7 +14,7 @@ $(document).ready(function() {
                 console.log("got an error", err);
             },
             success: function(res) {
-                window.location = "/calendar"
+                window.location = "/login"
             }
         })
     })

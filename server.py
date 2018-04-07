@@ -10,34 +10,15 @@ app.debug = True
 client = MongoClient(os.environ['MONGODB_URI'])
 db = client.get_default_database()
 
-
-#log_handler = logging.FileHandler('my_flask.log')
-
-
-#need to store static and dynamic events in cloud
-dynamic_events = []
-static_events = []
-
-#test methods
-@app.route("/example", methods=['GET'])
-def hello(name=None):
-    '''in url it will be /?adj=xxx'''
-    adj = request.args.get('adj')
-    print(adj)
-    return render_template('hello.html', name=name)
-
-@app.route("/", methods=['GET'])
-def redirect_to_login():
-    return redirect('/login', code=302)
-
 #login methods
 
-@app.route("/login", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
+def slash():
+    return redirect('/login', 302)
+
+@app.route("/login", methods=['GET'])
 def login():
-    if request.method == 'GET':
-        return render_template('login.html')
-    if request.method == 'POST':
-        return 'BAD OUTPUT'
+    return render_template('login.html')
 
 @app.route("/login_post", methods=['POST'])
 def login_post():
@@ -55,30 +36,35 @@ def login_post():
     else:
         return Response({"attempt": "failure"}, status=400, mimetype="application.json")
 
-@app.route("/signup", methods=['GET', 'POST'])
-def signup():
-    if request.method == 'GET':
-        return render_template('signup.html')
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if username and password:
-            existing_user = db.users.find_one({"username": username})
-            if not existing_user:
-                new_user = {
-                    'username': username,
-                    'password': password,
-                    'dynamic_events': [],
-                    'static_events': []
-                }
-                db.users.insert_one(new_user)
-                return redirect('/login', 302)
-            else:
-                #TODO:// user already exists ( format response better )
-                return Response({"attempt": "failure"}, status=400, mimetype="application/json")
-        else:
-            return Response({"attempt": "failure"}, status=400, mimetype="application/json")
+@app.route("/signup", methods=['GET'])
+def get_signup():
+    return render_template('signup.html')
 
+@app.route("/signup_post", methods=['POST'])
+def post_signup():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if username and password:
+        existing_user = db.users.find_one({"username": username})
+        if not existing_user:
+            new_user = {
+                'username': username,
+                'password': password,
+                'dynamic_events': [],
+                'static_events': []
+            }
+            db.users.insert_one(new_user)
+            return 'success'
+        else:
+            #TODO:// user already exists ( format response better )
+            return 'user already exists'
+    else:
+        return 'need to provide username and password'
+
+@app.route("/calendar", methods=['GET'])
+def get_calendar():
+    #get events here and pass in as args to render
+    return render_template('calendar.html')
 #api calls
 
 @app.route("/add_dynamic_event/<int:user_id>", methods=['POST'])
