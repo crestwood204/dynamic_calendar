@@ -18,6 +18,7 @@ db = client.get_default_database()
 dynamic_events = []
 static_events = []
 
+#test methods
 @app.route("/example", methods=['GET'])
 def hello(name=None):
     '''in url it will be /?adj=xxx'''
@@ -29,34 +30,56 @@ def hello(name=None):
 def redirect_to_login():
     return redirect('/login', code=302)
 
-@app.route("/login", methods=['GET'])
+#login methods
+
+@app.route("/login", methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+    if request.method == 'POST':
+        return 'BAD OUTPUT'
 
-@app.route("/signup", methods=['GET'])
-def signup():
-    return render_template('signup.html')
-
-@app.route("/test_post", methods=['POST'])
-def test_post(name="Elizabeth"):
-    new_user = {
-        "username": name
-    }
-    db.users.insert_one(new_user)
-
-@app.route("/new_user", methods=['POST'])
-def create_new_user(username=None, password=None):
+@app.route("/login_post", methods=['POST'])
+def login_post():
+    username = request.form.get('username')
+    password = request.form.get('password')
     if username and password:
-        new_user = {
-            'username': username,
-            'password': password,
-            'dynamic_events': [],
-            'static_events': []
-        }
-        db.users.insert_one(new_user)
-        return Response({"attempt": "success"}, status=201, mimetype="application/json")
+        user = db.users.find_one({"username": username})
+        if user:
+            if user["password"] == password:
+                return 'success'
+            else:
+                return 'incorrect password'
+        else:
+            return 'user does not exist'
     else:
-        return Response({"attempt": "failure"}, status=400, mimetype="application/json")
+        return Response({"attempt": "failure"}, status=400, mimetype="application.json")
+
+@app.route("/signup", methods=['GET', 'POST'])
+def signup():
+    if request.method == 'GET':
+        return render_template('signup.html')
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username and password:
+            existing_user = db.users.find_one({"username": username})
+            if not existing_user:
+                new_user = {
+                    'username': username,
+                    'password': password,
+                    'dynamic_events': [],
+                    'static_events': []
+                }
+                db.users.insert_one(new_user)
+                return redirect('/login', 302)
+            else:
+                #TODO:// user already exists ( format response better )
+                return Response({"attempt": "failure"}, status=400, mimetype="application/json")
+        else:
+            return Response({"attempt": "failure"}, status=400, mimetype="application/json")
+
+#api calls
 
 @app.route("/add_dynamic_event/<int:user_id>", methods=['POST'])
 def add_dynamic_event(dynamic_event):
