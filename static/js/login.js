@@ -14,7 +14,7 @@ $(document).ready(function() {
                 console.log("got an error", err);
             },
             success: function(res) {
-                window.location = "/calendar"
+                window.location = "/calendar/" + res
             }
         })
     })

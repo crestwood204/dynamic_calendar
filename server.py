@@ -28,7 +28,7 @@ def login_post():
         user = db.users.find_one({"username": username})
         if user:
             if user["password"] == password:
-                return 'success'
+                return '{}'.format(user['_id'])
             else:
                 return 'incorrect password'
         else:
@@ -61,9 +61,11 @@ def post_signup():
     else:
         return 'need to provide username and password'
 
-@app.route("/calendar", methods=['GET'])
-def get_calendar():
+@app.route("/calendar/<string:user_id>", methods=['GET'])
+def get_calendar(user_id):
     #get events here and pass in as args to render
+    #redirect to calendar with user id in args -> use user id to search in mongo
+    print(user_id)
     return render_template('calendar.html')
 #api calls
 

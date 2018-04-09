@@ -53,3 +53,22 @@ class Static_Event(Event):
 
     def __gt__(self, other):
         return (self.date > other.date)
+
+    def  __str__(self):
+        #process datetime object to get date and time
+        date = ''
+        time = ''
+        return '{} at {}: Location: {} Title: {}'.format(self.date, self.time, self.location, self.title)
+
+
+def order_events(start_day, end_day, delay_between_events, dvents, svents):
+    #sort the static events
+    svents = sorted(svents)
+    #initialize current time
+
+    #go through svents to find current svent
+    #check for star_day / end_day
+
+    #for each dvent, assign time based on svent, start/end day and delay
+
+    #keep ordering and return an array of the string representaiton for each event
