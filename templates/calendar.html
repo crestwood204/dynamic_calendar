@@ -12,7 +12,7 @@
             <div class="row">
                 <!-- To-do-list dynamic_events -->
                 <div class="col-xs-4">
-                    <h4 class="align_center">To-do-list:<button class="cust_btn">+</button></h4>
+                    <h4 class="align_center">To-do-list:<button id="add_dynamic_event_btn" class="cust_btn">+</button></h4>
                     {% for item in dynamic_events %}
                         <div class="row item">
                             <button class="event_btn"> {{ item }} </button>
@@ -28,6 +28,143 @@
 
                 </div>
             </div>
+        </div>
+
+        <!-- Modals -->
+
+        <!-- Dynamic Event Edit modal -->
+        <div class="modal fade" id="edit_dynamic_event" tabindex="-1" role="dialog" aria-labelledby="edit_dynamic_event_label" aria-hidden="true">
+          <div class="modal-dialog">
+        	<div class="modal-content">
+        		<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        			<h3 class="modal-title" id="edit_dynamic_event_label">Edit To-Do Item</h3>
+        		</div>
+        		<div class="modal-body">
+
+                    <!-- content goes here -->
+        			<form>
+                      <div class="form-group">
+                        <label for="title">Title</label>
+                        <input class="form-control" id="dynamic_event_title" placeholder="Enter Title">
+                      </div>
+                      <div class="form-group">
+                        <label> Complete By: </label>
+                        <input type="date" class="form-control" id="dynamic_event_date" placeholder="Enter Date">
+                      </div>
+                      <div class="form-group">
+                        <label> Time Duration: </label>
+                        <input type="number" class="form-control" min="0" id="dynamic_event_time" placeholder="Enter Length in Hours">
+                      </div>
+                    </form>
+
+        		</div>
+        		<div class="modal-footer">
+        			<div class="btn-group btn-group-justified" role="group" aria-label="group button">
+        				<div class="btn-group" role="group">
+        					<button type="button" class="btn btn-default" data-dismiss="modal"  role="button">Close</button>
+        				</div>
+        				<div class="btn-group btn-delete" role="group">
+        					<button type="button" id="delete_dynamic_event" class="btn btn-default btn-hover-red" data-dismiss="modal"  role="button">Delete</button>
+        				</div>
+        				<div class="btn-group" role="group">
+        					<button type="button" id="update_dynamic_event" class="btn btn-default btn-hover-green" data-action="save" role="button">Save</button>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
+          </div>
+        </div>
+
+        <!-- Dynamic Event Add modal -->
+        <div class="modal fade" id="add_dynamic_event" tabindex="-1" role="dialog" aria-labelledby="add_dynamic_event_label" aria-hidden="true">
+          <div class="modal-dialog">
+        	<div class="modal-content">
+        		<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        			<h3 class="modal-title" id="add_dynamic_event_label">Add To-Do Item</h3>
+        		</div>
+        		<div class="modal-body">
+
+                    <!-- content goes here -->
+        			<form>
+                      <div class="form-group">
+                        <label for="title">Title</label>
+                        <input class="form-control" id="add_dynamic_event_title" placeholder="Enter Title">
+                      </div>
+                      <div class="form-group">
+                        <label> Complete By: </label>
+                        <input type="date" class="form-control" id="add_dynamic_event_date" placeholder="Enter Date">
+                      </div>
+                      <div class="form-group">
+                        <label> Time Duration: </label>
+                        <input type="number" class="form-control" id="add_dynamic_event_time" placeholder="Enter Length in Hours">
+                      </div>
+                    </form>
+
+        		</div>
+        		<div class="modal-footer">
+        			<div class="btn-group btn-group-justified" role="group" aria-label="group button">
+        				<div class="btn-group" role="group">
+        					<button type="button" class="btn btn-default" data-dismiss="modal"  role="button">Close</button>
+        				</div>
+        				<div class="btn-group" role="group">
+        					<button type="button" id="add_dynamic_event_save" class="btn btn-default btn-hover-green" data-action="save" data-dismiss="modal" role="button">Save</button>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
+          </div>
+        </div>
+
+        <!-- Calendar Event modal -->
+        <div class="modal fade" id="edit_dynamic_event" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+        	<div class="modal-content">
+        		<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        			<h3 class="modal-title" id="lineModalLabel">Edit To-Do Item</h3>
+        		</div>
+        		<div class="modal-body">
+
+                    <!-- content goes here -->
+        			<form>
+                      <div class="form-group">
+                        <label for="title">Title</label>
+                        <input class="form-control" id="dynamic_event_title" placeholder="Enter Title">
+                      </div>
+                      <div class="form-group">
+                        <label> Complete By: </label>
+                        <input type="date" class="form-control" id="dynamic_event_date" placeholder="Enter Date">
+                      </div>
+                      <div class="form-group">
+                        <label> Time Duration: </label>
+                        <input type="numer" class="form-control" id="dynamic_event_time" placeholder="Enter Length in Hours">
+                      </div>
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox"> Check me out
+                        </label>
+                      </div>
+                      <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+
+        		</div>
+        		<div class="modal-footer">
+        			<div class="btn-group btn-group-justified" role="group" aria-label="group button">
+        				<div class="btn-group" role="group">
+        					<button type="button" class="btn btn-default" data-dismiss="modal"  role="button">Close</button>
+        				</div>
+        				<div class="btn-group btn-delete" role="group">
+        					<button type="button" id="delImage" class="btn btn-default btn-hover-red" data-dismiss="modal"  role="button">Delete</button>
+        				</div>
+        				<div class="btn-group" role="group">
+        					<button type="button" id="saveImage" class="btn btn-default btn-hover-green" data-action="save" role="button">Save</button>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
+          </div>
         </div>
     </body>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
