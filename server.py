@@ -51,6 +51,7 @@ def post_signup():
             new_user = {
                 'username': username,
                 'password': password,
+                'event_id': 0,
                 'dynamic_events': [],
                 'static_events': []
             }
@@ -77,13 +78,14 @@ def add_dynamic_event(user_id):
     title = request.form.get('title')
     due_date = request.form.get('due_date')
     duration = request.form.get('duration')
-
+    print(title)
     # add to mongodb
 
     existing_user = db.users.find_one({"_id": ObjectId(user_id)})
+    event_id = int(existing_user["event_id"])
     dynamic_events = existing_user["dynamic_events"]
-    dynamic_events.append({"title": title, "due_date": due_date, "duration": duration})
-    db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"dynamic_events": dynamic_events}}, upsert=False)
+    dynamic_events.append({"id": event_id, "title": title, "due_date": due_date, "duration": duration})
+    db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"dynamic_events": dynamic_events, "event_id": event_id + 1}}, upsert=False)
 
     return 'success'
 
@@ -101,9 +103,29 @@ def get_static_events():
     #get events
     return sorted(static_events)
 
-@app.route("/update_dynamic_event/<int:user_id>", methods=['PUT'])
-def update_dynamic_event(dynamic_event):
-    return 'hello'
+@app.route("/update_dynamic_event/<string:user_id>", methods=['PUT'])
+def update_dynamic_event(user_id):
+    # server-side validation
+    event_id = request.form.get('event_id')
+    title = request.form.get('title')
+    due_date = request.form.get('due_date')
+    duration = request.form.get('duration')
+
+    # add to mongodb
+
+    existing_user = db.users.find_one({"_id": ObjectId(user_id)})
+    dynamic_events = existing_user["dynamic_events"]
+    for index, event in enumerate(dynamic_events):
+        if event["id"] == int(event_id):
+            dynamic_events[index] = {
+                "id": event_id,
+                "title": title,
+                "due_date": due_date,
+                "duration": duration
+            }
+    db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"dynamic_events": dynamic_events}}, upsert=False)
+
+    return 'success'
 
 @app.route("/update_static_event/<int:user_id>", methods=['PUT'])
 def update_static_event(static_event):
@@ -112,7 +134,3 @@ def update_static_event(static_event):
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('page_not_found.html'), 404
-
-def test_import():
-    new_dvent = Dynamic_Event("hello", "check", "Towne 100")
-    print(new_dvent.GetType())
