@@ -67,16 +67,25 @@ def get_calendar(user_id):
     #get events here and pass in as args to render
     #redirect to calendar with user id in args -> use user id to search in mongo
     existing_user = db.users.find_one({"_id": ObjectId(user_id)})
-    print(len(existing_user["dynamic_events"]))
     if existing_user is None:
         return 'error: user does not exist'
     return render_template('calendar.html', dynamic_events=existing_user["dynamic_events"])
-#api calls
 
-@app.route("/add_dynamic_event/<int:user_id>", methods=['POST'])
-def add_dynamic_event(dynamic_event):
-    #TODO:// add to mongodb
-    dynamic_events.append(dynamic_event)
+@app.route("/add_dynamic_event/<string:user_id>", methods=['POST'])
+def add_dynamic_event(user_id):
+    # server-side validation
+    title = request.form.get('title')
+    due_date = request.form.get('due_date')
+    duration = request.form.get('duration')
+
+    # add to mongodb
+
+    existing_user = db.users.find_one({"_id": ObjectId(user_id)})
+    dynamic_events = existing_user["dynamic_events"]
+    dynamic_events.append({"title": title, "due_date": due_date, "duration": duration})
+    db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"dynamic_events": dynamic_events}}, upsert=False)
+
+    return 'success'
 
 @app.route("/add_static_event/<int:user_id>", methods=['POST'])
 def add_static_event(static_event):
