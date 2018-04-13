@@ -4,7 +4,8 @@ $(document).ready(function() {
         var my_btn = $(this);
         $('#edit_dynamic_event').modal('show');
         $('#dynamic_event_title').val(my_btn.text());
-
+        $('#dynamic_event_due_date').val(my_btn.attr('due_date'));
+        $('#dynamic_event_duration').val(my_btn.attr('duration'));
         //get current date
         var today = new Date();
         var dd = today.getDate();
@@ -21,6 +22,26 @@ $(document).ready(function() {
     })
 
     $('#add_dynamic_event_save').on('click', function(event) {
-        
+        var url_split = window.location.href.split('/');
+        var user_id = url_split[url_split.length - 1];
+        console.log(user_id);
+        var title = $('#add_dynamic_event_title').val();
+        var due_date = $('#add_dynamic_event_date').val();
+        var duration = $('#add_dynamic_event_time').val();
+        $.ajax({
+            url: '/add_dynamic_event/' + user_id,
+            method: 'post',
+            data: {
+                'title': title,
+                'due_date': due_date,
+                'duration': duration
+            },
+            error: function(err) {
+                console.log("got an error", err);
+            },
+            success: function(res) {
+                $('#add_dynamic_event').modal('hide');
+            }
+        })
     })
 })
