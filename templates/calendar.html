@@ -10,15 +10,16 @@
     <body>
         <div class="container">
             <div class="row">
+                <!-- To-do-list dynamic_events -->
                 <div class="col-xs-4">
                     <h4 class="align_center">To-do-list:<button class="cust_btn">+</button></h4>
-                    <div class="row item">
-                        <button> An event that is really really, i mean realy long<button>
-                    </div>
-                    <div class="row item">
-                        A second event
-                    </div>
+                    {% for item in dynamic_events %}
+                        <div class="row item">
+                            <button class="event_btn"> {{ item }} </button>
+                        </div>
+                    {% endfor %}
                 </div>
+                <!-- Calendar listing of events -->
                 <div class="col-xs-8 calendar">
                     <h4 class="align_center">
                         Calendar

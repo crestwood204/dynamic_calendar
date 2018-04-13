@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, Response, redirect
 from pymongo import MongoClient
+from bson import ObjectId
 from models.events import *
 import datetime
 import os
@@ -65,8 +66,11 @@ def post_signup():
 def get_calendar(user_id):
     #get events here and pass in as args to render
     #redirect to calendar with user id in args -> use user id to search in mongo
-    print(user_id)
-    return render_template('calendar.html')
+    existing_user = db.users.find_one({"_id": ObjectId(user_id)})
+    print(len(existing_user["dynamic_events"]))
+    if existing_user is None:
+        return 'error: user does not exist'
+    return render_template('calendar.html', dynamic_events=existing_user["dynamic_events"])
 #api calls
 
 @app.route("/add_dynamic_event/<int:user_id>", methods=['POST'])
