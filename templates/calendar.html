@@ -15,7 +15,7 @@
                     <h4 class="align_center">To-do-list:<button id="add_dynamic_event_btn" class="cust_btn">+</button></h4>
                     {% for item in dynamic_events %}
                         <div class="row item">
-                            <button class="event_btn"> {{ item }} </button>
+                            <button class="event_btn" duration={{ item.duration }} due_date={{ item.due_date }}> {{ item.title }} </button>
                         </div>
                     {% endfor %}
                 </div>
@@ -50,11 +50,11 @@
                       </div>
                       <div class="form-group">
                         <label> Complete By: </label>
-                        <input type="date" class="form-control" id="dynamic_event_date" placeholder="Enter Date">
+                        <input type="date" class="form-control" id="dynamic_event_due_date" placeholder="Enter Date">
                       </div>
                       <div class="form-group">
                         <label> Time Duration: </label>
-                        <input type="number" class="form-control" min="0" id="dynamic_event_time" placeholder="Enter Length in Hours">
+                        <input type="number" class="form-control" min="0" id="dynamic_event_duration" placeholder="Enter Length in Hours">
                       </div>
                     </form>
 
@@ -94,11 +94,11 @@
                       </div>
                       <div class="form-group">
                         <label> Complete By: </label>
-                        <input type="date" class="form-control" id="add_dynamic_event_date" placeholder="Enter Date">
+                        <input type="date" class="form-control" id="add_dynamic_event_due_date" placeholder="Enter Date">
                       </div>
                       <div class="form-group">
                         <label> Time Duration: </label>
-                        <input type="number" class="form-control" id="add_dynamic_event_time" placeholder="Enter Length in Hours">
+                        <input type="number" class="form-control" id="add_dynamic_event_duration" placeholder="Enter Length in Hours">
                       </div>
                     </form>
 
@@ -109,7 +109,7 @@
         					<button type="button" class="btn btn-default" data-dismiss="modal"  role="button">Close</button>
         				</div>
         				<div class="btn-group" role="group">
-        					<button type="button" id="add_dynamic_event_save" class="btn btn-default btn-hover-green" data-action="save" data-dismiss="modal" role="button">Save</button>
+        					<button type="button" id="add_dynamic_event_save" class="btn btn-default btn-hover-green" data-action="save" role="button">Save</button>
         				</div>
         			</div>
         		</div>
