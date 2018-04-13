@@ -112,7 +112,3 @@ def update_static_event(static_event):
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('page_not_found.html'), 404
-
-def test_import():
-    new_dvent = Dynamic_Event("hello", "check", "Towne 100")
-    print(new_dvent.GetType())
