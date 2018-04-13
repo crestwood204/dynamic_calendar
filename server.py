@@ -74,11 +74,26 @@ def get_calendar(user_id):
 
 @app.route("/add_dynamic_event/<string:user_id>", methods=['POST'])
 def add_dynamic_event(user_id):
-    # server-side validation
     title = request.form.get('title')
     due_date = request.form.get('due_date')
     duration = request.form.get('duration')
-    print(title)
+
+    # server-side validation
+    if int(duration) < 0:
+        return 'duration is too small'
+
+    today = datetime.date.today().split('-')
+    due_date = due_date.split('-')
+    if int(today[0]) < int(due_date[0]):
+        return 'year is too small'
+    if int(today[0]) == int(due_date[0]):
+        if int(today[1]) < int(due_date[1]):
+            return 'month is too small'
+        if int(today[1]) == int(due_date[1]):
+            if int(today[2]) < int(due_date[2]):
+                return 'day is too small'
+
+
     # add to mongodb
 
     existing_user = db.users.find_one({"_id": ObjectId(user_id)})
@@ -89,19 +104,10 @@ def add_dynamic_event(user_id):
 
     return 'success'
 
-@app.route("/add_static_event/<int:user_id>", methods=['POST'])
-def add_static_event(static_event):
+@app.route("/add_static_event/<string:user_id>", methods=['POST'])
+def add_static_event(user_id):
     #TODO:// add to mongodb
     static_events.append(static_event)
-
-@app.route("/get_dynamic_events/<int:user_id>", methods=['GET'])
-def get_dynamic_events():
-    return dynamic_events
-
-@app.route("/get_static_events/<int:user_id>", methods=['GET'])
-def get_static_events():
-    #get events
-    return sorted(static_events)
 
 @app.route("/update_dynamic_event/<string:user_id>", methods=['PUT'])
 def update_dynamic_event(user_id):
@@ -127,8 +133,18 @@ def update_dynamic_event(user_id):
 
     return 'success'
 
-@app.route("/update_static_event/<int:user_id>", methods=['PUT'])
-def update_static_event(static_event):
+@app.route("/delete_dynamic_event/<string:user_id>", methods=['DELETE'])
+def delete_dynamic_event(user_id):
+    event_id = request.form.get('event_id')
+    print(event_id)
+    existing_user = db.users.find_one({"_id": ObjectId(user_id)})
+    dynamic_events = [x for x in existing_user["dynamic_events"] if x["id"] != int(event_id)]
+    print(dynamic_events)
+    db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"dynamic_events": dynamic_events}}, upsert=False)
+    return 'success'
+
+@app.route("/delete_static_event/<string:user_id>", methods=['DELETE'])
+def delete_static_event(user_id):
     return 'hello'
 
 @app.errorhandler(404)
