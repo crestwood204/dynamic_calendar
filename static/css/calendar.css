@@ -1,0 +1,21 @@
+.align_center {
+    text-align: center;
+}
+
+.item {
+    text-align: center;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: gray;
+}
+
+.cust_btn {
+    background-color: #e8ebef;
+    font-size: 18px;
+    display: inline-block;
+    float: right;
+}
+
+.edit_btn {
+    font-size: 8px;
+}
