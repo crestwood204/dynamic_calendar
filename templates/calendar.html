@@ -15,7 +15,7 @@
                     <h4 class="align_center">To-do-list:<button id="add_dynamic_event_btn" class="cust_btn">+</button></h4>
                     {% for item in dynamic_events %}
                         <div class="row item">
-                            <button class="event_btn" duration={{ item.duration }} due_date={{ item.due_date }}> {{ item.title }} </button>
+                            <button class="event_btn" event_id={{ item.id }} duration={{ item.duration }} due_date={{ item.due_date }}> {{ item.title }} </button>
                         </div>
                     {% endfor %}
                 </div>
