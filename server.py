@@ -53,7 +53,9 @@ def post_signup():
                 'password': password,
                 'event_id': 0,
                 'dynamic_events': [],
-                'static_events': []
+                'static_events': [],
+                'dynamic_start_time': 9,
+                'dynamic_end_time': 21
             }
             db.users.insert_one(new_user)
             return 'success'
@@ -70,7 +72,13 @@ def get_calendar(user_id):
     existing_user = db.users.find_one({"_id": ObjectId(user_id)})
     if existing_user is None:
         return 'error: user does not exist'
-    return render_template('calendar.html', dynamic_events=existing_user["dynamic_events"])
+
+    start_time = existing_user["dynamic_start_time"]
+    end_time = existing_user["dynamic_end_time"]
+    dvents = existing_user["dynamic_events"]
+    svents = existing_user["static_events"]
+    calendar_strings = order_events(start_time, end_time, dvents, svents)
+    return render_template('calendar.html', dynamic_events=existing_user["dynamic_events"], calendar_strings=calendar_strings)
 
 @app.route("/add_dynamic_event/<string:user_id>", methods=['POST'])
 def add_dynamic_event(user_id):
@@ -79,18 +87,22 @@ def add_dynamic_event(user_id):
     duration = request.form.get('duration')
 
     # server-side validation
-    if int(duration) < 0:
-        return 'duration is too small'
+    if duration is not None:
+        if float(duration) < 0:
+            return 'duration is too small'
 
-    today = datetime.date.today().split('-')
+    today = str(datetime.date.today()).split('-')
+
     due_date = due_date.split('-')
-    if int(today[0]) < int(due_date[0]):
+    print(due_date)
+    print(today)
+    if int(today[0]) > int(due_date[0]):
         return 'year is too small'
     if int(today[0]) == int(due_date[0]):
-        if int(today[1]) < int(due_date[1]):
+        if int(today[1]) > int(due_date[1]):
             return 'month is too small'
         if int(today[1]) == int(due_date[1]):
-            if int(today[2]) < int(due_date[2]):
+            if int(today[2]) > int(due_date[2]):
                 return 'day is too small'
 
 
@@ -106,8 +118,29 @@ def add_dynamic_event(user_id):
 
 @app.route("/add_static_event/<string:user_id>", methods=['POST'])
 def add_static_event(user_id):
-    #TODO:// add to mongodb
-    static_events.append(static_event)
+    title = request.form.get('title')
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
+    start_time = request.form.get('start_time')
+    end_time = request.form.get('end_time')
+
+    # server validation
+
+    start_time_arr = start_time.split(':')
+    end_time_arr = end_time.split(':')
+    if int(end_time_arr[0]) < int(start_time_arr[0]):
+        return 'hour is too small'
+    if int(end_time_arr[0]) == int(start_time_arr[0]):
+        if int(end_time_arr[1]) < int(start_time_arr[1]):
+            return 'min is too small'
+
+    existing_user = db.users.find_one({"_id": ObjectId(user_id)})
+    event_id = int(existing_user["event_id"])
+    static_events = existing_user["static_events"]
+    static_events.append({"id": event_id, "title": title, "start_date": start_date, "end_date": end_date, "start_time": start_time, "end_time": end_time})
+    db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"static_events": static_events, "event_id": event_id + 1}}, upsert=False)
+
+    return 'success'
 
 @app.route("/update_dynamic_event/<string:user_id>", methods=['PUT'])
 def update_dynamic_event(user_id):
@@ -122,7 +155,8 @@ def update_dynamic_event(user_id):
     existing_user = db.users.find_one({"_id": ObjectId(user_id)})
     dynamic_events = existing_user["dynamic_events"]
     for index, event in enumerate(dynamic_events):
-        if event["id"] == int(event_id):
+        if int(event["id"]) == int(event_id):
+            print('yes')
             dynamic_events[index] = {
                 "id": event_id,
                 "title": title,

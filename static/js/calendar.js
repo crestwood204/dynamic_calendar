@@ -1,5 +1,7 @@
 $(document).ready(function() {
-    $('.event_btn').on('dblclick', function(event) {
+    // To-do-list functionality
+
+    $('.event_btn_d').on('dblclick', function(event) {
         //trigger modal for editing / deleting
         var my_btn = $(this);
         $('#edit_dynamic_event').modal('show');
@@ -30,6 +32,7 @@ $(document).ready(function() {
             },
             success: function(res) {
                 $('#edit_dynamic_event').modal('hide');
+                console.log(res)
             }
         })
     })
@@ -85,7 +88,82 @@ $(document).ready(function() {
             },
             success: function(res) {
                 $('#add_dynamic_event').modal('hide');
+                console.log(res)
             }
         })
+    })
+
+    //Calendar functionality
+
+    $('#add_static_event_btn').on('click', function(event) {
+        $('#add_static_event').modal('show');
+        //get current date
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        var time = today.getTime();
+        var hh = today.getHours();
+        var min = today.getMinutes();
+        if (dd<10) { dd = '0' + dd }
+        if (mm<10) { mm = '0' + mm }
+        if (hh<10) { hh = '0' + hh }
+        if (min<10) { mm = '0' + mm}
+        today = yyyy + '-' + mm + '-' + dd;
+        time = hh + ':' + min
+        console.log(today)
+        console.log(time)
+        $('#add_static_event_start_date').val(today)
+        $('#add_static_event_start_time').val(time)
+
+        if (hh == 23) {
+            hh = 0;
+            today.setDate(currentDate.getDate() + 1)
+            dd = today.getDay();
+            if (dd<10) { dd = '0' + dd }
+            mm = today.getMonth() + 1;
+            if (mm<10) { mm = '0' + mm }
+            yyyy = today.getFullYear();
+        } else {
+            hh = parseInt(hh) + 1
+        }
+
+        if (hh<10) { hh = '0' + hh }
+        today = yyyy + '-' + mm + '-' + dd;
+        time = hh + ':' + min
+        $('#add_static_event_end_date').val(today)
+        $('#add_static_event_end_time').val(time)
+    })
+
+    $('#add_static_event_save').on('click', function(event) {
+        var url_split = window.location.href.split('/');
+        var user_id = url_split[url_split.length - 1];
+        var title = $('#add_static_event_title').val();
+        var start_date = $('#add_static_event_start_date').val();
+        var start_time = $('#add_static_event_start_time').val();
+        var end_date = $('#add_static_event_end_date').val();
+        var end_time = $('#add_static_event_end_time').val();
+        $.ajax({
+            url: '/add_static_event/' + user_id,
+            method: 'post',
+            data: {
+                'title': title,
+                'start_date': start_date,
+                'start_time': start_time,
+                'end_date': end_date,
+                'end_time': end_time
+            },
+            error: function(err) {
+                console.log("got an error", err);
+            },
+            success: function(res) {
+                $('#add_static_event').modal('hide');
+            }
+        })
+    })
+
+    $('.event_btn_s').on('dblclick', function(event) {
+        var my_btn = $(this);
+        $('edit_static_event').modal('show')
     })
 })
