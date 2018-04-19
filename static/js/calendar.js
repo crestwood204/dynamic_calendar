@@ -164,6 +164,65 @@ $(document).ready(function() {
 
     $('.event_btn_s').on('dblclick', function(event) {
         var my_btn = $(this);
-        $('edit_static_event').modal('show')
+        if (my_btn.attr('event_type') == 'static') {
+            $('#edit_static_event').modal('show')
+            $('#edit_static_event_title').val(my_btn.attr('event_title'));
+            $('#edit_static_event_start_date').val(my_btn.attr('start_date'));
+            $('#edit_static_event_end_date').val(my_btn.attr('end_date'));
+            $('#edit_static_event_start_time').val(my_btn.attr('start_time'));
+            $('#edit_static_event_end_time').val(my_btn.attr('end_time'));
+            $('#edit_static_event').attr('event_id', my_btn.attr('event_id'));
+        }
     })
+
+    $('#edit_static_event_save').on('click', function(event) {
+        var url_split = window.location.href.split('/');
+        var user_id = url_split[url_split.length - 1];
+        var event_id = $('#edit_static_event').attr('event_id');
+        var title = $('#edit_static_event_title').val();
+        var start_date = $('#edit_static_event_start_date').val();
+        var end_date = $('#edit_static_event_end_date').val();
+        var start_time = $('#edit_static_event_start_time').val();
+        var end_time = $('#edit_static_event_end_time').val();
+        $.ajax({
+            url: '/update_static_event/' + user_id,
+            method: 'put',
+            data: {
+                'event_id': event_id,
+                'title': title,
+                'start_date': start_date,
+                'end_date': end_date,
+                'start_time': start_time,
+                'end_time': end_time,
+            },
+            error: function(err) {
+                console.log("got an error", err);
+            },
+            success: function(res) {
+                $('#edit_static_event').modal('hide');
+                console.log(res)
+            }
+        })
+    })
+
+    $('#delete_static_event').on('click', function(event) {
+        var url_split = window.location.href.split('/');
+        var user_id = url_split[url_split.length - 1];
+        var event_id = $('#edit_static_event').attr('event_id');
+        $.ajax({
+            url: '/delete_static_event/' + user_id,
+            method: 'delete',
+            data: {
+                'event_id': event_id
+            },
+            error: function(err) {
+                console.log("got an error", err);
+            },
+            success: function(res) {
+                $('#edit_static_event').modal('hide');
+                console.log(res)
+            }
+        })
+    })
+
 })
