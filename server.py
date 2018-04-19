@@ -4,7 +4,6 @@ from bson import ObjectId
 from models.events import *
 import datetime
 import os
-import requests
 
 app = Flask(__name__)
 app.debug = True
