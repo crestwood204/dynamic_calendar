@@ -15,7 +15,7 @@
                     <h4 class="align_center">To-do-list:<button id="add_dynamic_event_btn" class="cust_btn">+</button></h4>
                     {% for item in dynamic_events %}
                         <div class="row item">
-                            <button class="event_btn" event_id={{ item.id }} duration={{ item.duration }} due_date={{ item.due_date }}> {{ item.title }} </button>
+                            <button class="event_btn event_btn_d" event_id={{ item.id }} duration={{ item.duration }} due_date={{ item.due_date }}> {{ item.title }} </button>
                         </div>
                     {% endfor %}
                 </div>
@@ -23,9 +23,15 @@
                 <div class="col-xs-8 calendar">
                     <h4 class="align_center">
                         Calendar
-                        <button class="cust_btn">+</button>
+                        <button id="add_static_event_btn" class="cust_btn">+</button>
                     </h4>
-
+                    {% for item in calendar_strings %}
+                        <div class="row item">
+                            <button class="event_btn event_btn_s" event_title="{{ item.get_title() }}" event_type={{ item.get_event_type() }} event_id={{ item.get_id() }} start_date={{ item.get_start_date() }} end_date={{ item.get_end_date() }} start_time={{ item.get_start_time() }} end_time={{ item.get_end_time() }}>
+                                {{ item.get_start_date()}} -- {{ item.get_title() }} -- {{ item.get_start_time() }}
+                            </button>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -117,8 +123,97 @@
           </div>
         </div>
 
-        <!-- Calendar Event modal -->
-        <div class="modal fade" id="edit_dynamic_event" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <!-- Calendar Event Add modal -->
+        <div class="modal fade" id="add_static_event" tabindex="-1" role="dialog" aria-labelledby="add_static_event_label" aria-hidden="true">
+          <div class="modal-dialog">
+        	<div class="modal-content">
+        		<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        			<h3 class="modal-title" id="add_static_event_label">Add Event</h3>
+        		</div>
+        		<div class="modal-body">
+
+                    <!-- content goes here -->
+        			<form>
+                      <div class="form-group">
+                        <label for="title">Title</label>
+                        <input class="form-control" id="add_static_event_title" placeholder="Enter Title">
+                      </div>
+                      <div class="form-group">
+                        <label> Start Time </label>
+                        <input type="date" class="form-control" id="add_static_event_start_date" placeholder="Enter Start Date">
+                        <input type="time" class="form-control" id="add_static_event_start_time" placeholder="Enter Start Time">
+                      </div>
+                      <div class="form-group">
+                        <label> End Time: </label>
+                        <input type="date" class="form-control" id="add_static_event_end_date" placeholder="Enter End Date">
+                        <input type="time" class="form-control" id="add_static_event_end_time" placeholder="Enter End Time">
+                      </div>
+                    </form>
+
+        		</div>
+        		<div class="modal-footer">
+        			<div class="btn-group btn-group-justified" role="group" aria-label="group button">
+        				<div class="btn-group" role="group">
+        					<button type="button" class="btn btn-default" data-dismiss="modal"  role="button">Close</button>
+        				</div>
+        				<div class="btn-group" role="group">
+        					<button type="button" id="add_static_event_save" class="btn btn-default btn-hover-green" data-action="save" role="button">Save</button>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
+          </div>
+        </div>
+
+        <!-- Calendar Event Edit Modal -->
+        <div class="modal fade" id="edit_static_event" tabindex="-1" role="dialog" aria-labelledby="edit_static_event_label" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title" id="edit_static_event_label">Edit Event</h3>
+                </div>
+                <div class="modal-body">
+
+                    <!-- content goes here -->
+                    <form>
+                      <div class="form-group">
+                        <label for="title">Title</label>
+                        <input class="form-control" id="edit_static_event_title" placeholder="Enter Title">
+                      </div>
+                      <div class="form-group">
+                        <label> Start Time </label>
+                        <input type="date" class="form-control" id="edit_static_event_start_date" placeholder="Enter Start Date">
+                        <input type="time" class="form-control" id="edit_static_event_start_time" placeholder="Enter Start Time">
+                      </div>
+                      <div class="form-group">
+                        <label> End Time: </label>
+                        <input type="date" class="form-control" id="edit_static_event_end_date" placeholder="Enter End Date">
+                        <input type="time" class="form-control" id="edit_static_event_end_time" placeholder="Enter End Time">
+                      </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group btn-group-justified" role="group" aria-label="group button">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"  role="button">Close</button>
+                        </div>
+                        <div class="btn-group btn-delete" role="group">
+        					<button type="button" id="delete_static_event" class="btn btn-default btn-hover-red" data-dismiss="modal"  role="button">Delete</button>
+        				</div>
+                        <div class="btn-group" role="group">
+                            <button type="button" id="edit_static_event_save" class="btn btn-default btn-hover-green" data-action="save" role="button">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar Event Template -->
+        <div class="modal fade" id="add_static_event" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
           <div class="modal-dialog">
         	<div class="modal-content">
         		<div class="modal-header">
