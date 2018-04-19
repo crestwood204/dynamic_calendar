@@ -134,7 +134,6 @@ def order_events(start_time, end_time, dvents, svents):
 
         # assign the event
         while(due_dd >= day):
-            print('looping')
             # if there is a static event, consider it
             if len(static_events) > 0:
                 svent = static_events[0]
@@ -181,7 +180,6 @@ def order_events(start_time, end_time, dvents, svents):
                 if day == svent_start_date:
                     # try to add event before start time
                     if time + duration < svent_start_hr and time + duration <= end_time:
-                        print('3')
                         dvent.set_assigned_date(str(day))
                         dvent.set_assigned_time(time)
                         time += duration

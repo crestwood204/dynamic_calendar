@@ -93,7 +93,6 @@ def add_dynamic_event(user_id):
     today = str(datetime.date.today()).split('-')
 
     due_date_val = due_date.split('-')
-    print(today)
     if int(today[0]) > int(due_date_val[0]):
         return 'year is too small'
     if int(today[0]) == int(due_date_val[0]):
