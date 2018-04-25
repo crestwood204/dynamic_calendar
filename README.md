@@ -42,7 +42,7 @@ Project Features:
 
 How to launch / operate the project:
     -Open terminal and navigate to the dynamic_calendar directory
-    -source <env.sh>
+    -source env.sh
     -export FLASK_APP=server.py
     -flask run
     -Open web browser and go to localhost:5000 (Designed for Google Chrome)
