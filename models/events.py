@@ -137,6 +137,9 @@ def order_events(start_time, end_time, dvents, svents):
     # Loop over time and check static events for overlaps
     day = datetime.date.today()
     time = start_time
+    curr_time = int(str(datetime.datetime.now().time()).split(':')[0]) + 1
+    if time < curr_time:
+        time = curr_time
     for dvent in dynamic_events:
         duration = int(dvent.get_duration())
         due_date = dvent.get_due_date()
@@ -196,8 +199,8 @@ def order_events(start_time, end_time, dvents, svents):
                 # curr_day is the day that this event starts on
                 if day == svent_start_date:
                     # try to add event before start time
-                    if time + duration < svent_start_hr and
-                    time + duration <= end_time:
+                    if time + duration < svent_start_hr and (time + duration
+                                                            <= end_time):
                         dvent.set_assigned_date(str(day))
                         dvent.set_assigned_time(time)
                         time += duration
